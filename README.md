@@ -1,1 +1,4 @@
-# SW2Project
+## Miembros
+Carlos Marcos
+
+## Temática
