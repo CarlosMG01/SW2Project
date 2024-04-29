@@ -125,7 +125,7 @@
 }
 ```
 
-## Modelos de Datos JSON
+## Modelos de Datos XML
 
 ### Modelo de Datos para Restaurantes
 
