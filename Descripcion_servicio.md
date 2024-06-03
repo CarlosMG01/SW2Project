@@ -183,3 +183,10 @@
   </preferencias>
 </Usuario>
 ```
+
+## Obtención de los datos del Dataset
+### URL
+[text](https://www.kaggle.com/datasets/himanshupoddar/zomato-bangalore-restaurants)
+
+### Descripción
+Dataset de 12K restuarantes de Bengaluru, India. Este Dataset es idoneo para el proyecto ya que, aunque es bastante pesado, tiene todos los datos necesarios para poder realizar las operaciones necesarias.

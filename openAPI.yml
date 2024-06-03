@@ -1,8 +1,10 @@
 openapi: 3.0.0
+
 info:
   title: Sistema de Reservas para Restaurantes
   description: API para gestionar un sistema de reservas inteligente para restaurantes.
   version: "1.0.0"
+
 servers:
   - url: 'https://localhost:12345'
     description: Servidor en local
