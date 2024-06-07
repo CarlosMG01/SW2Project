@@ -1,72 +1,108 @@
-# API de Reservas de Restaurantes
+# API de Restaurantes
+
+## Introducción
+
+Este documento describe el servicio de la API de Restaurantes, una aplicación diseñada para gestionar información relacionada con restaurantes, incluyendo comentarios, fotos, tips y usuarios. La API permite realizar operaciones CRUD (Crear, Leer, Actualizar y Eliminar) y ofrece funcionalidades adicionales como la integración con APIs externas para obtener datos meteorológicos y direcciones.
 
 ## Recursos y Operaciones CRUD
 
 ### 1. Restaurantes
 
 - **Listar Restaurantes**
-  - **GET** `/restaurantes`
-  - **Descripción**: Listar todos los restaurantes con posibilidad de filtros por ubicación, tipo de cocina, y capacidad máxima.
+  - **GET** `/api/restaurantes?page={page}&limit={limit}`
+  - **Descripción**: Listar todos los restaurantes con paginación.
+
+- **Listar Restaurantes en una zona**
+  - **GET** `/api/restaurantes/area?lat={latitude}&lon={longitude}&area={distance}`
+  - **Descripción**: Listar todos los restaurantes dentro de una distancia especificada desde un punto geográfico dado.
 
 - **Obtener Detalles de Restaurante**
-  - **GET** `/restaurantes/{id}`
-  - **Descripción**: Obtener detalles de un restaurante específico.
+  - **GET** `/api/restaurantes/{id}`
+  - **Descripción**: Obtener detalles de un restaurante específico por `business_id`.
 
 - **Crear Restaurante**
-  - **POST** `/restaurantes`
+  - **POST** `/api/restaurantes`
   - **Descripción**: Crear un nuevo restaurante.
 
 - **Actualizar Restaurante**
-  - **PUT** `/restaurantes/{id}`
-  - **Descripción**: Actualizar un restaurante específico.
+  - **PUT** `/api/restaurantes/{id}`
+  - **Descripción**: Actualizar un restaurante específico por `business_id`.
 
 - **Eliminar Restaurante**
-  - **DELETE** `/restaurantes/{id}`
-  - **Descripción**: Eliminar un restaurante específico.
+  - **DELETE** `/api/restaurantes/{id}`
+  - **Descripción**: Eliminar un restaurante específico por `business_id`.
 
-### 2. Reservas
+### 2. Comentarios
 
-- **Listar Reservas**
-  - **GET** `/reservas`
-  - **Descripción**: Listar todas las reservas con filtros por fecha, restaurante y usuario.
+- **Listar Comentarios por Restaurante**
+  - **GET** `/api/comentarios/{id_restaurante}?page={page}&limit={limit}`
+  - **Descripción**: Listar comentarios para un restaurante específico con paginación.
 
-- **Obtener Detalles de Reserva**
-  - **GET** `/reservas/{id}`
-  - **Descripción**: Obtener detalles de una reserva específica.
+- **Crear Comentario**
+  - **POST** `/api/comentario/{id_restaurante}`
+  - **Descripción**: Crear un nuevo comentario para un restaurante específico.
 
-- **Crear Reserva**
-  - **POST** `/reservas`
-  - **Descripción**: Crear una nueva reserva.
+- **Obtener Detalles de Comentario**
+  - **GET** `/api/comentario/{id_comentario}`
+  - **Descripción**: Obtener detalles de un comentario específico por `comment_id`.
 
-- **Actualizar Reserva**
-  - **PUT** `/reservas/{id}`
-  - **Descripción**: Modificar una reserva existente.
+- **Actualizar Comentario**
+  - **PUT** `/api/comentario/{id_comentario}`
+  - **Descripción**: Actualizar un comentario específico por `comment_id`.
 
-- **Cancelar Reserva**
-  - **DELETE** `/reservas/{id}`
-  - **Descripción**: Cancelar una reserva.
+- **Eliminar Comentario**
+  - **DELETE** `/api/comentario/{id_comentario}`
+  - **Descripción**: Eliminar un comentario específico por `comment_id`.
 
-### 3. Usuarios
+### 3. Fotos
 
-- **Listar Usuarios**
-  - **GET** `/usuarios`
-  - **Descripción**: Listar todos los usuarios.
+- **Listar Fotos por Restaurante**
+  - **GET** `/api/photos/{business_id}?limit={limit}`
+  - **Descripción**: Listar fotos para un restaurante específico con un límite de resultados.
 
-- **Obtener Detalles de Usuario**
-  - **GET** `/usuarios/{id}`
-  - **Descripción**: Obtener detalles de un usuario específico.
+- **Eliminar Foto**
+  - **DELETE** `/api/photos/{photo_id}`
+  - **Descripción**: Eliminar una foto específica por `photo_id`.
 
-- **Registrar Usuario**
-  - **POST** `/usuarios`
-  - **Descripción**: Registrar un nuevo usuario.
+### 4. Tips
 
-- **Actualizar Usuario**
-  - **PUT** `/usuarios/{id}`
-  - **Descripción**: Actualizar información de un usuario.
+- **Listar Tips por Restaurante**
+  - **GET** `/api/tips/business/{business_id}?page={page}&limit={limit}`
+  - **Descripción**: Listar tips para un restaurante específico con paginación.
 
-- **Eliminar Usuario**
-  - **DELETE** `/usuarios/{id}`
-  - **Descripción**: Eliminar un usuario.
+- **Crear Tip**
+  - **POST** `/api/tips`
+  - **Descripción**: Crear un nuevo tip.
+
+- **Obtener Detalles de Tip**
+  - **GET** `/api/tips/{id}`
+  - **Descripción**: Obtener detalles de un tip específico por `tip_id`.
+
+- **Actualizar Tip**
+  - **PUT** `/api/tips/{id}`
+  - **Descripción**: Actualizar un tip específico por `tip_id`.
+
+- **Eliminar Tip**
+  - **DELETE** `/api/tips/{id}`
+  - **Descripción**: Eliminar un tip específico por `tip_id`.
+
+### 5. Usuarios
+
+- **Obtener Nombre de Usuario**
+  - **GET** `/api/users/{user_id}`
+  - **Descripción**: Obtener el nombre de un usuario por `user_id`.
+
+### 6. Google Maps
+
+- **Obtener Indicaciones**
+  - **GET** `/api/go?business_id={business_id}&originLat={latitude}&originLon={longitude}`
+  - **Descripción**: Obtener indicaciones para llegar a un restaurante desde una ubicación actual.
+
+### 7. Open Weather Map
+
+- **Obtener climatología**
+  - **GET** `/api/weather?business_id={business_id}`
+
 
 ## Modelos de Datos JSON
 
@@ -74,119 +110,69 @@
 
 ```json
 {
-  "id": "integer",
-  "nombre": "string",
-  "ubicación": {
-    "dirección": "string",
-    "ciudad": "string",
-    "estado": "string",
-    "país": "string",
-    "códigoPostal": "integer"
-  },
-  "tipoCocina": "string",
-  "capacidadMaxima": "number",
-  "telefono": "integer",
-  "email": "string",
-  "horario": {
-    "apertura": "string (HH:mm)",
-    "cierre": "string (HH:mm)"
-  },
-  "caracteristicasEspeciales": [
-    "string"
-  ],
-  "disponibilidadTerraza": "boolean"
+  "business_id": "string",
+  "name": "string",
+  "address": "string",
+  "city": "string",
+  "latitude": "number",
+  "longitude": "number",
+  "stars": "number",
+  "review_count": "number",
+  "attributes": "object",
+  "categories": "string",
+  "hours": "object"
 }
 ```
 
-### Modelo de Datos para las Reservas
+### Modelo de Datos para Comentarios
 ```json
 {
-  "id": "integer",
-  "fecha": "string (YYYY-MM-DD)",
-  "hora": "string (HH:mm)",
-  "numeroPersonas": "number",
-  "idRestaurante": "integer",
-  "idUsuario": "integer",
-  "estado": "string (opciones: 'confirmada', 'cancelada', 'pendiente')"
+  "review_id": "string",
+  "user_id": "string",
+  "business_id": "string",
+  "stars": "number",
+  "useful": "number",
+  "funny": "number",
+  "cool": "number",
+  "text": "string",
+  "date": "string"
 }
+```
+
+### Modelo de Datos para las fotos
+```json
+{
+  "photo_id": "string",
+  "business_id": "string",
+  "caption": "string",
+  "label": "string"
+}
+```
+
+### Modelo de Datos para los tips
+```json
+{
+  "text": "string",
+  "date": "string",
+  "business_id": "string",
+  "user_id": "string"
+}
+
 ```
 
 ### Modelo de Datos para Usuarios
 ```json
 {
-  "id": "integer",
-  "nombre": "string",
-  "correoElectronico": "string",
-  "telefono": "string",
-  "preferencias": {
-    "tipoCocina": "string",
-    "accesibilidad": "boolean"
-  }
+  "user_id": "integer",
+  "name": "string",
+  "review_count": "number",
 }
 ```
 
-## Modelos de Datos XML
-
-### Modelo de Datos para Restaurantes
-
-```xml
-<Restaurante>
-  <id>integer</id>
-  <nombre>string</nombre>
-  <ubicación>
-    <dirección>string</dirección>
-    <ciudad>string</ciudad>
-    <estado>string</estado>
-    <país>string</país>
-    <códigoPostal>integer</códigoPostal>
-  </ubicación>
-  <tipoCocina>string</tipoCocina>
-  <capacidadMaxima>number</capacidadMaxima>
-  <telefono>integer</telefono>
-  <email>string</email>
-  <horario>
-    <apertura>string (HH:mm)</apertura>
-    <cierre>string (HH:mm)</cierre>
-  </horario>
-  <caracteristicasEspeciales>
-    <caracteristica>string</caracteristica>
-  </caracteristicasEspeciales>
-  <disponibilidadTerraza>boolean</disponibilidadTerraza>
-</Restaurante>
-```
-
-### Modelo de Datos para las Reservas
-
-``` xml
-<Reserva>
-  <id>integer</id>
-  <fecha formato="YYYY-MM-DD">string</fecha>
-  <hora formato="HH:mm">string</hora>
-  <numeroPersonas>number</numeroPersonas>
-  <idRestaurante>integer</idRestaurante>
-  <idUsuario>integer</idUsuario>
-  <estado opciones="confirmada, cancelada, pendiente">string</estado>
-</Reserva>
-```
-
-### Modelo de Datos para Usuarios
-
-```xml
-<Usuario>
-  <id>integer</id>
-  <nombre>string</nombre>
-  <correoElectronico>string</correoElectronico>
-  <telefono>integer</telefono>
-  <preferencias>
-    <tipoCocina>string</tipoCocina>
-    <accesibilidad>boolean</accesibilidad>
-  </preferencias>
-</Usuario>
-```
 
 ## Obtención de los datos del Dataset
 ### URL
-[text](https://www.kaggle.com/datasets/himanshupoddar/zomato-bangalore-restaurants)
+[yelp](https://www.yelp.com/dataset)
 
 ### Descripción
-Dataset de 12K restuarantes de Bengaluru, India. Este Dataset es idoneo para el proyecto ya que, aunque es bastante pesado, tiene todos los datos necesarios para poder realizar las operaciones necesarias.
+Dataset con 150k establecimientos, 200k imágenes, casi 7M de reviews en más de 11 zonas metropolitanas de EEUU

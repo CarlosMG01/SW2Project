@@ -1,34 +1,29 @@
 document.addEventListener('DOMContentLoaded', () => {
-  const loadRestaurants = (page = 1, limit = 10) => {
-    fetch(`http://localhost:3000/api/restaurants?page=${page}&limit=${limit}`)
-      .then(response => {
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-        return response.json();
-      })
+  const loadData = (endpoint, containerId, page = 1, limit = 10) => {
+    fetch(`http://localhost:3000/api/${endpoint}?page=${page}&limit=${limit}`)
+      .then(response => response.json())
       .then(result => {
         const { data, total } = result;
-        console.log('Data received from API:', data); // Mensaje de depuración
 
-        const restaurantList = document.getElementById('restaurant-list');
-        restaurantList.innerHTML = ''; // Limpiar lista anterior
+        const container = document.getElementById(containerId);
+        container.innerHTML = '';
 
-        data.forEach(restaurant => {
+        data.forEach(item => {
           const div = document.createElement('div');
-          div.className = 'restaurant';
+          div.className = endpoint;
           div.innerHTML = `
-            <h2>${restaurant.name}</h2>
-            <p>Address: ${restaurant.address}</p>
-            <p>Location: ${restaurant.location}</p>
-            <p>Rating: ${restaurant.rate}</p>
-            <p>Cuisine: ${restaurant.cuisines}</p>
+            <h2>${item.name || item.business_id}</h2>
+            <p>Name: ${item.name || ''}</p>
+            <p>Address: ${item.address || ''}</p> 
+            <p>Location: ${item.latitude + ', ' + item.longitude || ''}</p>
+            <p>Rating: ${item.stars || ''}</p>
+            <p>Cuisine: ${item.categories || ''}</p>
           `;
-          restaurantList.appendChild(div);
+          container.appendChild(div);
         });
 
         const pagination = document.getElementById('pagination');
-        pagination.innerHTML = ''; // Limpiar paginación anterior
+        pagination.innerHTML = '';
 
         const totalPages = Math.ceil(total / limit);
 
@@ -39,7 +34,7 @@ document.addEventListener('DOMContentLoaded', () => {
           pageLink.className = 'page-link';
           pageLink.onclick = (e) => {
             e.preventDefault();
-            loadRestaurants(i, limit);
+            loadData(endpoint, containerId, i, limit);
           };
           pagination.appendChild(pageLink);
         }
@@ -47,5 +42,5 @@ document.addEventListener('DOMContentLoaded', () => {
       .catch(error => console.error('Error fetching data:', error));
   };
 
-  loadRestaurants();
+  loadData('restaurantes', 'restaurant-list');
 });

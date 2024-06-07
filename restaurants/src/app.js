@@ -3,13 +3,16 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const db = require('./db');
 const routes = require('./routes');
+const { errorHandler } = require('./middlewares/errorHandler');
 
 const app = express();
-app.use(cors()); // Asegúrate de que CORS está habilitado
+app.use(cors());
 app.use(bodyParser.json());
 app.use(express.static('public'));
 
 app.use('/api', routes);
+
+app.use(errorHandler); // Middleware de manejo de errores
 
 app.get('/', (req, res) => {
   res.sendFile(__dirname + '/public/index.html');
